@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER = 'C:\\Users\\nilka\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin\\docker.exe'
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -8,21 +12,28 @@ pipeline {
             }
         }
 
+        stage('Check Docker') {
+            steps {
+                bat '"%DOCKER%" --version'
+                bat '"%DOCKER%" info'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t hello-devops:latest .'
+                bat '"%DOCKER%" build -t hello-devops:latest .'
             }
         }
 
         stage('Run Application') {
             steps {
-                bat 'docker run --rm hello-devops:latest'
+                bat '"%DOCKER%" run --rm hello-devops:latest'
             }
         }
 
         stage('Run Pytest') {
             steps {
-                bat 'docker run --rm --entrypoint python hello-devops:latest -m pytest -v'
+                bat '"%DOCKER%" run --rm --entrypoint python hello-devops:latest -m pytest -v'
             }
         }
     }
