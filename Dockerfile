@@ -8,5 +8,6 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY hello.py .
 COPY test_hello.py .
+COPY monitor.py .
 
 CMD ["python", "hello.py"]

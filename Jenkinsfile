@@ -1,3 +1,4 @@
+
 pipeline {
     agent any
 
@@ -35,6 +36,18 @@ pipeline {
             steps {
                 bat '"%DOCKER%" run --rm --entrypoint python hello-devops:latest -m pytest -v'
             }
+        }
+
+        stage('Evidently Monitoring') {
+            steps {
+                bat '"%DOCKER%" run --rm -v "%WORKSPACE%:/app" -w /app --entrypoint python hello-devops:latest monitor.py'
+            }
+        }
+    }
+
+    post {
+        always {
+            archiveArtifacts artifacts: 'evidently_report.html', allowEmptyArchive: true
         }
     }
 }
